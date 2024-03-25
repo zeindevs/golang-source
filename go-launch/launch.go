@@ -2,142 +2,146 @@ package launch
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
-	"strconv"
+	"path"
 
 	"github.com/julienschmidt/httprouter"
 )
-
-type Validator interface {
-	Validate() (any, bool)
-}
-
-type ErrorHandler func(*Ctx, error)
-
-type PostHandler[T any] func(*PostCtx[T]) error
-
-type Handler func(*Ctx) error
 
 const (
 	ApplicationJSON   = "application/json"
 	MultipartFormData = "multipart/form-data"
 )
 
-func validateRequestParams(ctx *Ctx, v any) bool {
-	if v, ok := v.(Validator); ok {
-		if errs, ok := v.Validate(); !ok {
-			ctx.Status(http.StatusBadRequest).JSON(errs)
-			return false
-		}
-	}
-	return true
+var plugins []any
+
+type Validator interface {
+	Validate() error
 }
+
+type Handler func(*Ctx) error
+
+type Plugin func(Handler) Handler
+
+type ErrorHandler func(*Ctx, error)
 
 type Ctx struct {
-	r          *http.Request
-	w          http.ResponseWriter
-	statusCode int
-	params     httprouter.Params
+	r            *http.Request
+	w            http.ResponseWriter
+	params       httprouter.Params
+	status       int
+	App          *Launch
+	ErrorHandler ErrorHandler
+	RequestID    string
 }
 
-func newCtx(w http.ResponseWriter, r *http.Request, params httprouter.Params) *Ctx {
-	return &Ctx{
-		r:          r,
-		w:          w,
-		statusCode: http.StatusOK,
-		params:     params,
-	}
+func (c *Ctx) Request() *http.Request {
+	return c.r
 }
 
-type Param string
-
-func (p Param) AsInt(ctx *Ctx) (int, error) {
-	val, err := strconv.Atoi(string(p))
-	if err != nil {
-		m := map[string]string{"error": fmt.Sprintf("param <%s> not of type <int>", p)}
-		ctx.Status(http.StatusBadRequest).JSON(m)
-		return 0, err
-	}
-	return val, nil
-}
-
-func (c *Ctx) Param(name string) Param {
-	return Param(c.params.ByName(name))
+func (c *Ctx) Param(name string) string {
+	return c.params.ByName(name)
 }
 
 func (c *Ctx) Status(s int) *Ctx {
-	c.statusCode = s
+	c.status = s
 	return c
 }
 
 func (c *Ctx) JSON(v any) error {
-	c.w.WriteHeader(c.statusCode)
+	c.w.WriteHeader(c.status)
 	c.w.Header().Add("Content-Type", ApplicationJSON)
 	return json.NewEncoder(c.w).Encode(v)
 }
 
-type launch struct {
-	errorHandler ErrorHandler
+type Launch struct {
+	routePrefix  string
 	router       *httprouter.Router
+	plugins      []Plugin
+	errorHandler ErrorHandler
 }
 
-var App = &launch{
-	errorHandler: func(ctx *Ctx, err error) {},
+var App = &Launch{
 	router:       httprouter.New(),
+	plugins:      []Plugin{},
+	errorHandler: func(c *Ctx, err error) {},
 }
 
-type PostCtx[T any] struct {
-	Ctx
-	params T
-}
-
-func (c *PostCtx[T]) RequestParams() T {
-	return c.params
-}
-
-func Start() {
-	http.ListenAndServe(":3000", App.router)
-}
-
-func Get(path string, h Handler) {
-	fn := func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		ctx := newCtx(w, r, p)
-		if r.Method != "GET" {
-			ctx.Status(http.StatusMethodNotAllowed).JSON(map[string]string{
-				"error": fmt.Sprintf("method <%s> not allowed", r.Method),
-			})
-			return
-		}
-		h(ctx)
+func New() *Launch {
+	return &Launch{
+		router:  httprouter.New(),
+		plugins: []Plugin{},
 	}
-	App.router.GET(path, fn)
 }
 
-func Post[T any](path string, h PostHandler[T]) {
-	fn := func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		var (
-			params T
-			ctx    = newCtx(w, r, p)
-		)
-		if r.Method != "POST" {
-			ctx.Status(http.StatusMethodNotAllowed).JSON(map[string]string{
-				"error": fmt.Sprintf("method <%s> not allowed", r.Method),
-			})
+func (l *Launch) makeHTTPHandler(h Handler) httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		ctx := &Ctx{
+			r:            r,
+			w:            w,
+			params:       p,
+			status:       http.StatusOK,
+			ErrorHandler: defaultErrorHandler,
+		}
+		for i := len(l.plugins) - 1; i >= 0; i-- {
+			h = l.plugins[i](h)
+		}
+		if err := h(ctx); err != nil {
+			ctx.ErrorHandler(ctx, err)
 			return
 		}
-		if err := json.NewDecoder(r.Body).Decode(&params); err != nil {
-			App.errorHandler(ctx, err)
-			return
-		}
-		if !validateRequestParams(ctx, params) {
-			return
-		}
-		h(&PostCtx[T]{
-			Ctx:    *ctx,
-			params: params,
-		})
 	}
-	App.router.POST(path, fn)
+}
 
+func (l *Launch) addHandler(method, route string, h Handler) {
+	route = path.Join(l.routePrefix, route)
+	l.router.Handle(method, route, l.makeHTTPHandler(h))
+}
+
+func (l *Launch) Plug(plugins ...Plugin) {
+	l.plugins = append(l.plugins, plugins...)
+}
+
+func (l *Launch) Get(route string, h Handler) {
+	l.addHandler("GET", route, h)
+}
+
+func (l *Launch) Post(route string, h Handler) {
+	l.addHandler("POST", route, h)
+}
+
+func (l *Launch) Put(route string, h Handler)     {}
+func (l *Launch) Patch(route string, h Handler)   {}
+func (l *Launch) Delete(route string, h Handler)  {}
+func (l *Launch) Head(route string, h Handler)    {}
+func (l *Launch) Options(route string, h Handler) {}
+
+func (l *Launch) Start() {
+	http.ListenAndServe(":3000", l.router)
+}
+
+func RequestParams[T any](c *Ctx) (T, error) {
+	var params T
+	if err := json.NewDecoder(c.r.Body).Decode(&params); err != nil {
+		return params, err
+	}
+	if err := validateRequestParams(params); err != nil {
+		return params, err
+	}
+	return params, nil
+}
+
+func validateRequestParams(params any) error {
+	if v, ok := params.(Validator); ok {
+		if err := v.Validate(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func defaultErrorHandler(c *Ctx, err error) {
+	c.Status(http.StatusInternalServerError).JSON(map[string]string{
+		"error": err.Error(),
+	})
 }

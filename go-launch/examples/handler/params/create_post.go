@@ -1,14 +1,16 @@
 package params
 
+import "fmt"
+
 // Request domain
 type CreatePost struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 }
 
-func (p CreatePost) Validate() (any, bool) {
+func (p CreatePost) Validate() error {
 	if len(p.Title) < 100 {
-		return map[string]string{"title": "to short"}, false
+		return fmt.Errorf("invalid email")
 	}
-	return nil, true
+	return nil
 }
