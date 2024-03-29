@@ -1,0 +1,13 @@
+{{> partials/navigation }}
+
+<div>
+  {{ #user }}
+	<h1>Welcome, {{user.FirstName}}</h1>
+	<p>{{user.LastName}}</p>
+	<p>{{user.Email}}</p>
+	<p>{{user.IsAdmin}}</p>
+  {{ #Roles }}
+  <p>{{ . }}</p>
+  {{ /Roles }}
+  {{ /user }}
+</div>

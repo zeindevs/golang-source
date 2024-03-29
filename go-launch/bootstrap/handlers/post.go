@@ -1,9 +1,9 @@
-package handler
+package handlers
 
 import (
 	"github.com/zeindevs/launch"
+	"github.com/zeindevs/launch/bootstrap/data"
 	"github.com/zeindevs/launch/db"
-	"github.com/zeindevs/launch/examples/data"
 )
 
 // 1. Domain Data -> Post
