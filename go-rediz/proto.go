@@ -38,15 +38,12 @@ func parseCommand(raw string) (Command, error) {
 
 		if v.Type() == resp.Array {
 			for _, val := range v.Array() {
-
 				switch val.String() {
 				case CommandGET:
 					if len(v.Array()) != 2 {
 						return nil, fmt.Errorf("invalid number of variables of GET command")
 					}
-					cmd := GetCommand{
-						key: v.Array()[1].Bytes(),
-					}
+					cmd := GetCommand{key: v.Array()[1].Bytes()}
 					return cmd, nil
 				case CommandSET:
 					if len(v.Array()) != 3 {
@@ -60,7 +57,6 @@ func parseCommand(raw string) (Command, error) {
 				}
 			}
 		}
-		break
 	}
 
 	return nil, fmt.Errorf("invalid or unknown command received: %s", raw)
