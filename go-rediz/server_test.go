@@ -11,6 +11,15 @@ import (
 	"github.com/zeindevs/gorediz/client"
 )
 
+func TestFooBar(t *testing.T) {
+	in := map[string]string{
+		"server":  "redis",
+		"version": "6.0",
+	}
+	out := respWriteMap(in)
+	fmt.Println(string(out))
+}
+
 func TestServerWithMultiClients(t *testing.T) {
 	// server := NewServer(Config{})
 	// go func() {
@@ -37,7 +46,7 @@ func TestServerWithMultiClients(t *testing.T) {
 			if err != nil {
 				log.Fatal(err)
 			}
-			fmt.Printf("client %d got this val back => %s\n", i, val)
+			fmt.Printf("client %d got this val back => %s\n", it, val)
 			wg.Done()
 		}(i)
 	}

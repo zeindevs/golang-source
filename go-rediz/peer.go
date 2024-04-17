@@ -29,7 +29,6 @@ func NewPeer(conn net.Conn, msgCh chan Message, delCh chan *Peer) *Peer {
 
 func (p *Peer) readLoop() error {
 	rd := resp.NewReader(p.conn)
-
 	for {
 		v, _, err := rd.ReadValue()
 		if err == io.EOF {
@@ -41,31 +40,32 @@ func (p *Peer) readLoop() error {
 		}
 
 		if v.Type() == resp.Array {
-			for _, val := range v.Array() {
-				switch val.String() {
-				case CommandGET:
-					if len(v.Array()) != 2 {
-						return fmt.Errorf("invalid number of variables of GET command")
-					}
-					cmd := GetCommand{key: v.Array()[1].Bytes()}
-
-					p.msgCh <- Message{
-						cmd:  cmd,
-						peer: p,
-					}
-				case CommandSET:
-					if len(v.Array()) != 3 {
-						return fmt.Errorf("invalid number of variables of SET command")
-					}
-					cmd := SetCommand{
-						key: v.Array()[1].Bytes(),
-						val: v.Array()[2].Bytes(),
-					}
-					p.msgCh <- Message{
-						cmd:  cmd,
-						peer: p,
-					}
+			rawCMD := v.Array()[0]
+			var cmd Command
+			switch rawCMD.String() {
+			case CommandClient:
+				cmd = ClientCommand{
+					value: v.Array()[1].String(),
 				}
+			case CommandGET:
+				cmd = GetCommand{
+					key: v.Array()[1].Bytes(),
+				}
+			case CommandSET:
+				cmd = SetCommand{
+					key: v.Array()[1].Bytes(),
+					val: v.Array()[2].Bytes(),
+				}
+			case CommandHello:
+				cmd = HelloCommand{
+					value: v.Array()[1].String(),
+				}
+			default:
+				fmt.Println("got unhandled command", rawCMD)
+			}
+			p.msgCh <- Message{
+				cmd:  cmd,
+				peer: p,
 			}
 		}
 	}

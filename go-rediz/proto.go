@@ -10,8 +10,10 @@ import (
 )
 
 const (
-	CommandSET = "SET"
-	CommandGET = "GET"
+	CommandSET    = "set"
+	CommandGET    = "get"
+	CommandHello  = "hello"
+	CommandClient = "client"
 )
 
 type Command interface{}
@@ -22,6 +24,14 @@ type SetCommand struct {
 
 type GetCommand struct {
 	key []byte
+}
+
+type HelloCommand struct {
+	value string
+}
+
+type ClientCommand struct {
+	value string
 }
 
 func parseCommand(raw string) (Command, error) {
@@ -39,6 +49,11 @@ func parseCommand(raw string) (Command, error) {
 		if v.Type() == resp.Array {
 			for _, val := range v.Array() {
 				switch val.String() {
+				case CommandClient:
+					cmd := ClientCommand{
+						value: v.Array()[1].String(),
+					}
+					return cmd, nil
 				case CommandGET:
 					if len(v.Array()) != 2 {
 						return nil, fmt.Errorf("invalid number of variables of GET command")
@@ -54,10 +69,26 @@ func parseCommand(raw string) (Command, error) {
 						val: v.Array()[2].Bytes(),
 					}
 					return cmd, nil
+				case CommandHello:
+					cmd := HelloCommand{
+						value: v.Array()[1].String(),
+					}
+					return cmd, nil
 				}
 			}
 		}
 	}
 
 	return nil, fmt.Errorf("invalid or unknown command received: %s", raw)
+}
+
+func respWriteMap(m map[string]string) []byte {
+	buf := &bytes.Buffer{}
+	buf.WriteString("%" + fmt.Sprintf("%d\r\n", len(m)))
+	rw := resp.NewWriter(buf)
+	for k, v := range m {
+		rw.WriteString(k)
+		rw.WriteString(":" + v)
+	}
+	return buf.Bytes()
 }

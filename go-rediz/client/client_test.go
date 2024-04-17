@@ -7,26 +7,27 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-redis/redis/v8"
+	"github.com/redis/go-redis/v9"
 )
 
 func TestNewRedisClient(t *testing.T) {
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:     "localhost:5001",
 		Password: "",
 		DB:       0,
 	})
+	fmt.Println(rdb)
 
-	err := rdb.Set(context.Background(), "key", "value", 0).Err()
-	if err != nil {
-		panic(err)
-	}
-	val, err := rdb.Get(context.TODO(), "key").Result()
-	if err != nil {
-		panic(err)
+	if err := rdb.Set(context.Background(), "foo", "bar", 0).Err(); err != nil {
+		t.Fatal(err)
 	}
 
-	fmt.Println("GET =>", val)
+	val, err := rdb.Get(context.Background(), "foo").Result()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("go this value", val)
 }
 
 func TestNewClient1(t *testing.T) {
@@ -35,7 +36,7 @@ func TestNewClient1(t *testing.T) {
 		log.Fatal(err)
 	}
 	defer c.Close()
-	if err := c.Set(context.TODO(), "foo", "bar"); err != nil {
+	if err := c.Set(context.TODO(), "foo", 1); err != nil {
 		log.Fatal(err)
 	}
 	val, err := c.Get(context.TODO(), "foo")
