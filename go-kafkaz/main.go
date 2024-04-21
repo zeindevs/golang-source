@@ -13,6 +13,86 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
+const (
+	KeyAPIVersions = 18
+)
+
+type ApiVersion struct {
+	APIKey     int16
+	MinVersion int16
+	MaxVersion int16
+}
+
+type ApiVersionResponse struct {
+	ErrorCode      int16
+	ApiVersions    []ApiVersion
+	ThrottleTimeMs int32
+}
+
+func (avr *ApiVersionResponse) Encode(w io.Writer) error {
+	buf := &bytes.Buffer{}
+	binary.Write(buf, binary.BigEndian, int32(0))  // placeholder
+	binary.Write(buf, binary.BigEndian, int32(18)) // apiKEY version...
+	binary.Write(buf, binary.BigEndian, int32(3))  // apiVersion
+	binary.Write(buf, binary.BigEndian, avr.ErrorCode)
+	binary.Write(buf, binary.BigEndian, len(avr.ApiVersions))
+
+	for _, version := range avr.ApiVersions {
+		binary.Write(buf, binary.BigEndian, version.APIKey)
+		binary.Write(buf, binary.BigEndian, version.MinVersion)
+		binary.Write(buf, binary.BigEndian, version.MaxVersion)
+	}
+
+	binary.Write(buf, binary.BigEndian, avr.ThrottleTimeMs)
+	binary.BigEndian.PutUint32(buf.Bytes(), uint32(buf.Len()-4))
+	return nil
+}
+
+// HeaderHeader
+type Header struct {
+	Size int32
+
+	APIKey        int16
+	APIVersion    int16
+	CorrelationID int32
+	ClientID      string
+}
+
+func (h Header) Encode(w io.Writer) error {
+	binary.Write(w, binary.BigEndian, h.Size)
+	return nil
+}
+
+type APIVersion struct {
+	CorrelationID         int32
+	ClientID              string
+	ClientSoftwareName    string
+	ClientSoftwareVersion string
+}
+
+func readAPIVersion(r io.Reader) APIVersion {
+	var version APIVersion
+	binary.Read(r, binary.BigEndian, &version.CorrelationID)
+
+	var size int16
+	binary.Read(r, binary.BigEndian, &size)
+
+	clientID := make([]byte, size)
+	binary.Read(r, binary.BigEndian, &clientID)
+
+	binary.Read(r, binary.BigEndian, &size)
+	clientSoftwareName := make([]byte, size)
+	binary.Read(r, binary.BigEndian, &clientSoftwareName)
+
+	clientSoftwareVersion, _ := io.ReadAll(r)
+
+	return APIVersion{
+		ClientID:              string(clientID),
+		ClientSoftwareName:    string(clientSoftwareName),
+		ClientSoftwareVersion: string(clientSoftwareVersion),
+	}
+}
+
 type Messsage struct {
 	data []byte
 	// ...
@@ -76,17 +156,42 @@ func (s *Server) handleConn(conn net.Conn) {
 			slog.Error("connection read error", "err", err)
 			return
 		}
-		msg := buf[:n]
-		fmt.Println(string(msg))
-		r := bytes.NewReader(msg)
+		rawMsg := buf[:n]
+		r := bytes.NewReader(rawMsg)
+		var header Header
+		binary.Read(r, binary.BigEndian, &header)
 
-		acks := make([]byte, 2)
-		binary.Read(r, binary.BigEndian, acks)
-
-		timeoutms := binary.BigEndian.Uint32(msg[2:6])
-
-		fmt.Println("acks: ", acks)
-		fmt.Println("timeoutms:", timeoutms)
+		switch header.APIKey {
+		case KeyAPIVersions:
+			version := readAPIVersion(r)
+			slog.Info("server received message from client", "message", version)
+			resp := ApiVersionResponse{
+				ErrorCode: 0,
+				ApiVersions: []ApiVersion{
+					{
+						APIKey:     0,
+						MinVersion: 0,
+						MaxVersion: 10,
+					},
+					{
+						APIKey:     KeyAPIVersions,
+						MinVersion: 0,
+						MaxVersion: 3,
+					},
+					{
+						APIKey:     19,
+						MinVersion: 0,
+						MaxVersion: 7,
+					},
+				},
+				ThrottleTimeMs: 100,
+			}
+			fmt.Println("before encoding version")
+			resp.Encode(conn)
+			fmt.Println("after encoding version")
+		default:
+			fmt.Println("unhandled message from the client => ", header.APIKey)
+		}
 	}
 }
 
@@ -166,4 +271,21 @@ func consume() error {
 	}
 
 	return c.Close()
+}
+
+func readVarint(r io.ByteReader) (int, error) {
+	var result int
+	var shift uint
+	for {
+		b, err := r.ReadByte()
+		if err != nil {
+			return 0, err
+		}
+		result |= int(b&0x7f) << shift
+		if (b & 0x80) == 0 {
+			break
+		}
+		shift += 7
+	}
+	return result, nil
 }
