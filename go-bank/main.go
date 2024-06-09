@@ -6,27 +6,8 @@ import (
 	"log"
 )
 
-func seedAccount(store Storage, fname, lname, pw string) *Account {
-	acc, err := NewAccount(fname, lname, pw)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err := store.CreateAccount(acc); err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("new account => ", acc.Number)
-
-	return acc
-}
-
-func seedAccounts(s Storage) {
-	seedAccount(s, "anthony", "GG", "hunter88888")
-}
-
 func main() {
-	seed := flag.Bool("seed", false, "seed the db")
+	seed := flag.Bool("seed", false, "seed to db")
 	flag.Parse()
 
 	store, err := NewPostgresStore()
