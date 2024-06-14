@@ -1,0 +1,11 @@
+{{ > www/partials/nav.html }}
+
+{{ ^airdrop }}
+  <div class="text-6xl font-bold text-blue-500">NO AIRDROP</div>
+{{ /airdrop }}
+
+{{ #airdrop }}
+<div>
+  <a class="text-8xl font-bold text-blue-500" href="http://localhost:4000/d/{{subdomain}}">HERE an airdrop</a>
+</div>
+{{ /airdrop }}
