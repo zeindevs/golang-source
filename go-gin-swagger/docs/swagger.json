@@ -1,0 +1,62 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "A Tag service API in Go using Gin framework",
+        "title": "Tag Service API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8888",
+    "basePath": "/api",
+    "paths": {
+        "/tags": {
+            "post": {
+                "description": "Save tags data in Db.",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create tags",
+                "parameters": [
+                    {
+                        "description": "Create tags",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.CreateTagsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "request.CreateTagsRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.Response": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
