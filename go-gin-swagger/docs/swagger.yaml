@@ -1,0 +1,40 @@
+basePath: /api
+definitions:
+  request.CreateTagsRequest:
+    properties:
+      name:
+        type: string
+    type: object
+  response.Response:
+    properties:
+      data:
+        items:
+          type: string
+        type: array
+    type: object
+host: localhost:8888
+info:
+  contact: {}
+  description: A Tag service API in Go using Gin framework
+  title: Tag Service API
+  version: "1.0"
+paths:
+  /tags:
+    post:
+      description: Save tags data in Db.
+      parameters:
+      - description: Create tags
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateTagsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Create tags
+swagger: "2.0"
