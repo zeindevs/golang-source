@@ -1,0 +1,22 @@
+{
+  "request": {
+    "urlPath": "/send-webhook",
+    "method": "GET"
+  },
+  "response": {
+    "status": 200
+  },
+  "serveEventListeners": [
+    {
+      "name": "webhook",
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8080",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": "{\"result\"}: \"SUCCESS\"}"
+      }
+    }
+  ]
+}
