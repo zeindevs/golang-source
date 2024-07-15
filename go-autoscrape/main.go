@@ -53,30 +53,30 @@ func main() {
 	otakudesuService := service.NewOtakudesuService(db)
 
 	quitCh1 := make(chan bool)
-	quitCh2 := make(chan bool)
-
 	worker1 := Worker[service.Otakudesu]{
 		Name:     "Otakudesu Ongoing",
 		Interval: time.Second * 30,
-		Func:     otakudesuScraper.GetOngoing,
+		Func:     otakudesuScraper.GetOngoingAll,
 		StoreDB:  otakudesuService.Save,
 		QuitCh:   quitCh1,
 	}
-	worker2 := Worker[service.Otakudesu]{
-		Name:     "Otakudesu Complete",
-		Interval: time.Second * 30,
-		Func:     otakudesuScraper.GetComplete,
-		StoreDB:  otakudesuService.Save,
-		QuitCh:   quitCh2,
-	}
+
+ //  quitCh2 := make(chan bool)
+	// worker2 := Worker[service.Otakudesu]{
+	// 	Name:     "Otakudesu Complete",
+	// 	Interval: time.Second * 30,
+	// 	Func:     otakudesuScraper.GetCompleteAll,
+	// 	StoreDB:  otakudesuService.Save,
+	// 	QuitCh:   quitCh2,
+	// }
 
 	go worker1.Run()
-	go worker2.Run()
+	// go worker2.Run()
 
-	time.Sleep(40 * time.Second)
+	time.Sleep(50 * time.Second)
 	quitCh1 <- true
-	quitCh2 <- true
-	time.Sleep(5 * time.Second)
+	// quitCh2 <- true
+	time.Sleep(2 * time.Second)
 
 	log.Println("Exiting")
 }
