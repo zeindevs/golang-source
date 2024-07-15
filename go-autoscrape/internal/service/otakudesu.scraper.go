@@ -22,16 +22,22 @@ type Otakudesu struct {
 	Status  string `json:"status"`
 }
 
-func (o *Otakudesu) ToModel() *model.Otakudesu {
-	return &model.Otakudesu{
+func (o *Otakudesu) ToModel(status string) *model.Otakudesu {
+	m := &model.Otakudesu{
 		Title:   o.Title,
-		Day:     o.Day,
 		Date:    o.Date,
+		Day:     o.Day,
 		Episode: o.Episode,
 		Url:     o.Url,
 		Image:   o.Image,
 		Status:  o.Status,
 	}
+	if status == "complete" {
+		m.Day = ""
+		m.Rating = o.Day
+	}
+
+	return m
 }
 
 type OtakudesuScraper struct {

@@ -25,14 +25,14 @@ func (s *OtakudesuService) Save(ctx context.Context, data []*Otakudesu) error {
 		var exist model.Otakudesu
 		resp := s.db.WithContext(ctx).First(&exist, "title = ?", item.Title)
 		if resp.Error == nil {
-			update := s.db.WithContext(ctx).Where("id = ?", exist.ID).Updates(item.ToModel())
+			update := s.db.WithContext(ctx).Where("id = ?", exist.ID).Updates(item.ToModel(item.Status))
 			if update.Error != nil {
 				return update.Error
 			}
 			log.Println("Update", item.Title)
 			updated++
 		} else {
-			create := s.db.WithContext(ctx).Create(item.ToModel())
+			create := s.db.WithContext(ctx).Create(item.ToModel(item.Status))
 			if create.Error != nil {
 				return create.Error
 			}
