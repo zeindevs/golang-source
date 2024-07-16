@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gorilla Chat Application</title>
+    <link href="./style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="center">
+      <h1>Gorilla Chat Application</h1>
+      <h3 id="chat-header">Currently in chat: general</h3>
+      <h3 id="connection-header">Connected to Websocket: false</h3>
+
+      <form id="chatroom-selection">
+        <label for="chatroom">Chatroom:</label>
+        <input type="text" id="chatroom" name="chatroom" /><br /><br />
+        <input type="submit" value="Change chatroom" />
+      </form>
+
+      <br />
+      <textarea
+        class="messagearea"
+        id="chatmessages"
+        readonly
+        name="chatmessages"
+        rows="4"
+        cols="50"
+        placeholder="Welcome to the general chatroom, here messages from others will appear"
+      ></textarea>
+
+      <br />
+      <form id="chatroom-message">
+        <label for="message">Message:</label>
+        <input type="text" id="message" name="message" /><br /><br />
+        <input type="submit" value="Send message" />
+      </form>
+
+      <div style="border: 3px solid black; margin-top: 30px">
+        <form id="login-form">
+          <label for="username">username:</label>
+          <input type="text" id="username" name="username" /><br />
+          <label for="password">password:</label>
+          <input type="password" id="password" name="password" /><br /><br />
+          <input type="submit" value="Login" />
+        </form>
+      </div>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
