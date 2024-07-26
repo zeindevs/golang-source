@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func formatBytes(bytes int64) string {
@@ -38,8 +39,10 @@ func getDepth(rootDir, path string) int {
 }
 
 func main() {
+  start := time.Now()
+
 	if len(os.Args) < 4 {
-		fmt.Printf("Usage: %s <directory> <max-depth> -d/-f", os.Args[0])
+		fmt.Printf("Usage: dugo <directory> <max-depth> -d/-f")
 		return
 	}
 
@@ -106,7 +109,6 @@ func main() {
 			}
 			return nil
 		})
-
 	} else {
 		fmt.Println("Operation must a following -d/-f")
 		return
@@ -125,4 +127,6 @@ func main() {
 	for _, dirSize := range dirSizes {
 		fmt.Printf("%s | %s\n", formatBytes(dirSize.Size), strings.ReplaceAll(dirSize.Path, rootDir, "."))
 	}
+
+  fmt.Println("took", time.Since(start).String())
 }
