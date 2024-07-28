@@ -3,9 +3,22 @@
   <head>
     <title>Native Messaging Golang</title>
     <script src="popup.js"></script>
+    <style>
+      form {
+        display: flex;
+        flex-direction: col;
+        gap: 3px;
+      }
+      button {
+        width: 100%;
+      }
+    </style>
   </head>
   <body>
-    <input type="text" id="message" placeholder="Type a message" />
-    <button id="send">Send</button>
+    <form>
+      <input type="text" id="message" placeholder="Type a message" required />
+      <button id="send">Send</button>
+    </form>
+    <code id="result"></code>
   </body>
 </html>
