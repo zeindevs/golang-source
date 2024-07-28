@@ -1,0 +1,13 @@
+{
+  "name": "Native Message Golang",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Native Message Golang",
+    "default_popup": "popup.html"
+  },
+  "permissions": ["nativeMessaging"]
+}
