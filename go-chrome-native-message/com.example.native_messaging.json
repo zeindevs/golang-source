@@ -1,0 +1,9 @@
+{
+  "name": "com.example.native_messaging",
+  "description": "Native Messaging Golang",
+  "path":"D:\\PROJECT\\GITHUB\\golang-source\\go-chrome-native-message\\gonative.exe",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://mkknjpcihjgcmghafblnanhobhkphlce/"
+  ]
+}
