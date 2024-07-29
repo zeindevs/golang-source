@@ -1,15 +1,15 @@
-# rust-dizx
+# dugo
 
 <div align="center">
 
-### Golang directory and file size like `du -h -d 1`
+### Calculate directory and file sizes, with Golang like `du -h -d 1`
 
 </div>
 
 ## Usage
 
 ```sh
-dizx <directory> <max-depth> -d/-f 
+dugo <directory> <max-depth> -d/-f 
 ```
 
 ## License
