@@ -1,17 +1,17 @@
 run: build
-	@./bin/main.exe
+	./bin/main
 
 build:
-	@go build -o bin/main.exe
+	go build -ldflags="-s -w" -o bin/main main.go
 	
 test:
-	@go test ./...
+	go test ./...
 
 testr:
-	@go test ./... --race
+	go test ./... --race
 	
 testv:
-	@go test -v ./...
+	go test -v ./...
 
 testvr:
-	@go test -v ./... --race
+	go test -v ./... --race
