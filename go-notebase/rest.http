@@ -1,0 +1,4 @@
+### Send file
+POST http://localhost:3000/api/v1/users/1/parse-kindle-file HTTP/1.1
+Content-Type: multipart/form-data;boundary="boundary"
+Content-Disposition: form-data; name="file"; filename="example.txt"
