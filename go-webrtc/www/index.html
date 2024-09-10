@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WebRTC in Golang</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="main.js"></script>
+</head>
+
+<body class="h-screen bg-zinc-950 text-white flex items-center flex-col justify-center p-3">
+  <header class="pb-20">
+    <h1 class="text-3xl font-bold text-center">WebRTC in Golang</h1>
+  </header>
+  <section id="action" class="flex flex-col gap-3 w-full col-span-2 max-w-sm mx-auto">
+    <button id="create" class="py-2 px-5 rounded bg-white text-zinc-950 font-medium text-sm text-nowrap hover:bg-white/80">Create Room</button>
+    <form id="form" class="flex gap-3">
+      <input id="roomId" type="text" class="py-2 px-3 rounded text-sm bg-zinc-800 border border-zinc-700 w-full" placeholder="Room ID" required />
+      <button id="join" type="submit" class="py-2 px-5 rounded bg-white text-zinc-950 font-medium text-sm text-nowrap hover:bg-white/80">Join</button>
+    </form>
+  </section>
+  <section id="connect" class="hidden">
+    <p class="font-medium text-center">Connecting...</p>
+  </section>
+  <main id="main" class="grid grid-cols-2 w-full gap-3 justify-center"></main>
+</body>
+
+</html>
