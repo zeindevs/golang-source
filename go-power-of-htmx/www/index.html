@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Power of HTMX</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/2.0.2/htmx.min.js"
+    integrity="sha512-iRA+DJgDLUKPk+pqGpAM3+wSDeO5iKQkYXGtIv4+EA8oJWN1mewMJD7kWC9hHCyUTdey9bQypAhx6PASWShjOw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+
+  <button id="btn" hx-get="/user/1" hx-target="#user-details" hx-swap="innerHTML">Get User</button>
+  <div id="user-details"> </div>
+
+  <!--<script>-->
+  <!--  $("#btn").click(() => {-->
+  <!--    $.get("/user/1").then((data) => {-->
+  <!--      $("#user-details").html(data)-->
+  <!--    })-->
+  <!--  })-->
+  <!--</script>-->
+
+</body>
+
+</html>
