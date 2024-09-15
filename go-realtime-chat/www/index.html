@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go Real time Chat</title>
+  <script src="//cdn.tailwindcss.com"></script>
+  <script src="static/main.js"></script>
+</head>
+
+<body>
+  <!-- Form Login -->
+  <form action="post" id="login" class="h-screen flex items-center justify-center hidden">
+    <div class="max-w-sm w-full p-5 rounded bg-zinc-100 space-y-5">
+      <h1 class="text-center font-bold text-2xl text-blue-600">Welcome!</h1>
+      <div>
+        <input type="email" name="email"
+          class="py-2 px-3 rounded border w-full border-zinc-300 focus:border-blue-600 focus:outline-blue-600"
+          placeholder="Email address" autocomplete="email" required>
+      </div>
+      <div>
+        <input type="password" name="password"
+          class="py-2 px-3 rounded border w-full border-zinc-300 focus:border-blue-600 focus:outline-blue-600"
+          placeholder="Password" autocomplete="current-password" required>
+      </div>
+      <div>
+        <button type="submit"
+          class="py-2 px-3 rounded border border-blue-600 bg-blue-600 text-white hover:bg-blue-700 flex items-center text-sm font-medium w-full justify-center">Login</button>
+      </div>
+      <div class="flex items-center gap-2 justify-center">
+        Don't have an account?
+        <button id="btn-signup" class="text-blue-600 font-medium">Sign Up</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Form Sign Up-->
+  <form action="post" id="signup" class="h-screen flex items-center justify-center hidden">
+    <div class="max-w-sm w-full p-5 rounded bg-zinc-100 space-y-5">
+      <h1 class="text-center font-bold text-2xl text-blue-600">Sign Up</h1>
+      <div>
+        <input type="text" name="username"
+          class="py-2 px-3 rounded border w-full border-zinc-300 focus:border-blue-600 focus:outline-blue-600"
+          placeholder="Username" autocomplete="username" required>
+      </div>
+      <div>
+        <input type="email" name="email"
+          class="py-2 px-3 rounded border w-full border-zinc-300 focus:border-blue-600 focus:outline-blue-600"
+          placeholder="Email address" autocomplete="email" required>
+      </div>
+      <div>
+        <input type="password" name="password"
+          class="py-2 px-3 rounded border w-full border-zinc-300 focus:border-blue-600 focus:outline-blue-600"
+          placeholder="Password" autocomplete="current-password" required>
+      </div>
+      <div>
+        <button type="submit"
+          class="py-2 px-3 rounded border border-blue-600 bg-blue-600 text-white hover:bg-blue-700 flex items-center text-sm font-medium w-full justify-center">Sign
+          Up</button>
+      </div>
+      <div class="flex items-center gap-2 justify-center">
+        Already have an account?
+        <button id="btn-login" class="text-blue-600 font-medium">Login</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Rooms -->
+  <section id="rooms" class="flex flex-col hidden gap-10 max-w-6xl mx-auto px-5">
+    <form action="post" id="create-room" class="p-5">
+      <div class="flex items-center gap-3 max-w-xs mx-auto">
+        <input type="text" name="id"
+          class="py-2 px-3 rounded border w-full border-zinc-300 focus:border-blue-600 focus:outline-blue-600"
+          placeholder="Room name">
+        <button
+          class="py-2 px-3 rounded border border-blue-600 bg-blue-600 text-white hover:bg-blue-700 flex items-center text-sm font-medium justify-center">Create</button>
+      </div>
+    </form>
+    <p>Available Room</p>
+    <ul id="list-rooms" class="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+
+    </ul>
+  </section>
+
+  <!--- Form Chat -->
+  <section class="h-screen flex p-5 space-y-3 flex-col">
+    <ul class="flex flex-col gap-2 flex-1 w-full">
+      <li class="flex flex-start">
+        <div class="">
+          <p class="text-sm">username</p>
+          <p>Message</p>
+        </div>
+      </li>
+      <li class="flex self-end">
+        <div class="">
+          <p class="text-sm">me</p>
+          <p>Message</p>
+        </div>
+      </li>
+    </ul>
+    <form action="post" id="send-message" class="flex gap-3 items-center">
+      <input type="text" name="message" class="w-full py-2 px-3 border focus:outline-blue-600"
+        placeholder="Type message here">
+      <button
+        class="py-2 px-3 rounded border border-blue-600 bg-blue-600 text-white hover:bg-blue-700 flex items-center text-sm font-medium justify-center">Send</button>
+    </form>
+  </section>
+</body>
+
+</html>

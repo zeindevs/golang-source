@@ -1,0 +1,42 @@
+@BASE_URL = http://localhost:9001
+
+### Signup
+POST {{BASE_URL}}/signup HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "user",
+  "email": "user@mail.com",
+  "password": "password"
+}
+
+### Login
+POST {{BASE_URL}}/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "user@mail.com",
+  "password": "password"
+}
+
+### Logout
+GET {{BASE_URL}}/logout HTTP/1.1
+
+### Create Room
+POST {{BASE_URL}}/ws/createRoom HTTP/1.1
+Content-Type: application/json
+
+{
+  "id": "1",
+  "name": "ruri"
+}
+
+### Join Room
+GET {{BASE_URL}}/ws/joinRoom/1 HTTP/1.1
+
+### Get Rooms
+GET {{BASE_URL}}/ws/getRooms HTTP/1.1
+
+### Get Clients
+GET {{BASE_URL}}/ws/getClients/1 HTTP/1.1
+
