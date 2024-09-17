@@ -1,0 +1,4 @@
+@BASEURL = http://localhost:8080
+
+### Check api health
+GET {{BASEURL}}/v1/health
