@@ -1,0 +1,30 @@
+@BASEURL = http://localhost:8080
+
+### Register
+POST {{BASEURL}}/register
+Content-Type: application/x-www-form-urlencoded
+
+username=username&password=password
+
+### Login
+# @name login
+POST {{BASEURL}}/login
+Content-Type: application/x-www-form-urlencoded
+
+username=username
+
+### Protected
+POST {{BASEURL}}/protected
+Content-Type: application/x-www-form-urlencoded
+Cookie: session_token=nbsVTaOHzEXBSslL9D7txpOXhfb4DMkqFKKztJIyOXo=
+X-CSRF-Token: JASdhQxuYdXvzHCwqH2WqlRJ7jSPjbB3JIi2IBpUX84=
+
+username=username&password=password
+
+### Logout
+POST {{BASEURL}}/logout
+Content-Type: application/x-www-form-urlencoded
+Cookie: session_token=nbsVTaOHzEXBSslL9D7txpOXhfb4DMkqFKKztJIyOXo=
+X-CSRF-Token: JASdhQxuYdXvzHCwqH2WqlRJ7jSPjbB3JIi2IBpUX84=
+
+username=username
