@@ -1,0 +1,13 @@
+@BASEURL = http://localhost:8080
+
+### Uploading
+POST {{BASEURL}}/upload
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="media"; filename="data.csv"
+Content-Type: text/csv
+
+< ./data.csv
+
+--boundary--
