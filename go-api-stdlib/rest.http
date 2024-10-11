@@ -1,0 +1,16 @@
+@BASEURL = http://localhost:8080
+@TOKEN = 123
+
+### Get user profile
+GET {{BASEURL}}/user/profile?clientId=user1
+Authorization: Bearer {{TOKEN}}
+
+### Update user profile
+PUT {{BASEURL}}/user/profile?clientId=user1
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+{
+  "email": "update@gmail.com",
+  "name": "update"
+}
