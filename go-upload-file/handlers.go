@@ -13,6 +13,7 @@ func storeUpload(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNotAcceptable)
 		return
 	}
+
 	defer r.MultipartForm.RemoveAll()
 
 	uf, ufh, err := r.FormFile("media")
