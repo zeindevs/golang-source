@@ -1,0 +1,10 @@
+@BASEURL = http://localhost:8080
+
+### Welcome
+POST {{BASEURL}}/welcome
+Content-Type: application/x-www-form-urlencoded
+
+user=user&password=password
+
+### Panic
+GET {{BASEURL}}/panic
