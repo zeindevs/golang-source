@@ -11,7 +11,7 @@ build-exe:
 	x86_64-w64-mingw32-g++ -Wall -Wextra -o bin/main.exe example/main.cpp -L./lib -lmain -lpthread -Wl,-rpath=./lib
 
 build-exe-release:
-	x86_64-w64-mingw32-g++ -Wall -Wextra -s -O3 -o bin/main.exe example/main.cpp -L./lib -lmain -lpthread -Wl,-rpath=./lib
+	x86_64-w64-mingw32-g++ -Wall -Wextra -s -static -O3 -o bin/main.exe example/main.cpp -L./lib -Wl,-Bdynamic -lmain -Wl,-rpath=./lib -Wl,-Bstatic -lpthread -static-libgcc -static-libstdc++
 
 libso:
 	GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o lib/libmain.so -buildmode=c-shared main.go
