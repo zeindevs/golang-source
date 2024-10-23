@@ -12,8 +12,7 @@ INSERT INTO product (
 ) RETURNING *;
 
 -- name: DeleteProduct :exec
-DELETE FROM product
-WHERE id = $1;
+DELETE FROM product WHERE id = $1;
 
 -- name: TotalPrice :one
 SELECT SUM(price)::float FROM product;
