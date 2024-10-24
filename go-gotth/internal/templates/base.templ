@@ -1,0 +1,19 @@
+package templates
+
+templ layout() {
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<title>GOTTH</title>
+			<link href="/static/css/style.css" rel="stylesheet"/>
+		</head>
+		<body class="bg-zinc-950 text-white">
+			{ children... }
+		</body>
+	</html>
+}
+
+templ Index() {
+	@layout() {
+	}
+}
