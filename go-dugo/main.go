@@ -39,7 +39,7 @@ func getDepth(rootDir, path string) int {
 }
 
 func main() {
-  start := time.Now()
+	start := time.Now()
 
 	if len(os.Args) < 4 {
 		fmt.Printf("Usage: dugo <directory> <max-depth> -d/-f")
@@ -128,5 +128,5 @@ func main() {
 		fmt.Printf("%s | %s\n", formatBytes(dirSize.Size), strings.ReplaceAll(dirSize.Path, rootDir, "."))
 	}
 
-  fmt.Println("took", time.Since(start).String())
+	fmt.Println("took", time.Since(start).String())
 }
