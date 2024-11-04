@@ -1,0 +1,7 @@
+{
+  "hello": "Hello!",
+  "welcome": "Wecome to my app!",
+  "greeting": {
+    "other": "Hello {{.Name}}!"
+  }
+}
