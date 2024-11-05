@@ -1,0 +1,5 @@
+{
+  "Required": "{{.Field}} required",
+  "InvalidEmail": "Email address not valid",
+  "ShouldMax": "{{.Field}} field max {{.Max}} characters"
+}
