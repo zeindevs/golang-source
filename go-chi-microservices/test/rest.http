@@ -1,0 +1,32 @@
+@BASEURL = http://localhost:3000
+
+### Create Order
+POST {{BASEURL}}/orders
+Content-Type: application/json
+
+{
+  "customer_id": "f3d8a9d3-2dc7-4593-998f-0de1a5f341c0",
+  "line_items": [
+    {
+      "item_id": "e5061a31-3aa9-4513-913a-5ed0efb6d689",
+      "quantity": 5,
+      "price": 1999
+    }
+  ]
+}
+
+### Get All Order
+GET {{BASEURL}}/orders
+
+### Get Order By ID
+GET {{BASEURL}}/orders/1117897224384258115
+
+### Update Order Status
+PUT {{BASEURL}}/orders/1117897224384258115
+Content-Type: application/json
+
+{
+  "status": "shipped"
+}
+
+
