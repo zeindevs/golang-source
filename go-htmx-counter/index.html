@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Go HTMX Counter</title>
+    <script src="/static/htmx.min.js"></script>
+  </head>
+  <body>
+    <div>
+      <p>Counter: <span id="counter">{{.Counter}}</span></p>
+    </div>
+    <div>
+      <button hx-target="#counter" hx-post="/decrease">-</button>
+      <button hx-target="#counter" hx-post="/increase">+</button>
+    </div>
+  </body>
+</html>
