@@ -1,0 +1,34 @@
+{{ define "Base" }}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GO HTMX TODO</title>
+    <link rel="stylesheet" href="/static/ui.css" />
+    <script src="/static/main.js"></script>
+  </head>
+  <body>
+    <div class="max-w-screen-md mx-auto mt-8">
+      <div class="flex justify-between items-center">
+        {{ template "TotalCount" dict "Count" .Count "SwapOOB" false }}
+        <!---->
+        {{ template "CompletedCount" dict "Count" .CompletedCount "SwapOOB"
+        false }}
+      </div>
+
+      {{ template "Form" }}
+      <form
+        hx-put="/tasks"
+        hx-trigger="end"
+        hx-swap="none"
+        id="items"
+        class="space-y-2.5 my-4"
+      >
+        {{ range .Items }} {{ template "Item" dict "Item" . "SwapOOB" false
+        "Editing" false }} {{ end}}
+      </form>
+    </div>
+  </body>
+</html>
+{{ end }}
