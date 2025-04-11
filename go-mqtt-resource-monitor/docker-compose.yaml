@@ -1,0 +1,41 @@
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9002:9002"
+    env_file:
+        - ./.env.production
+    environment:
+        APP_ENV: "production"
+        APP_PORT: ":9002" 
+    depends_on:
+        - broker
+    networks:
+        - mosquitto
+
+  broker:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    networks:
+        - mosquitto
+    restart: unless-stopped
+
+volumes:
+  config:
+  data:
+  log:
+
+networks:
+  mosquitto:
+    name: mosquitto
+    driver: bridge
