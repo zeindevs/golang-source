@@ -1,0 +1,10 @@
+{
+  "name": "com.example.native_messaging",
+  "description": "Go Native Messaging Host Example",
+  "path": "/home/zeindevs/.local/bin/go-native-message",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://pnkgiacnliekahfchljeokkcnfpknbfk/",
+    "chrome-extension://ngpampappnmepgilojfohadhhmbhlaek/"
+  ]
+}

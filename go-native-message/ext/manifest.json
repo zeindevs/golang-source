@@ -1,0 +1,24 @@
+{
+  "name": "Native Messaging Example",
+  "version": "1.0",
+  "manifest_version": 2,
+  "permissions": [
+    "<all_urls>",
+    "tabs",
+    "cookies",
+    "contextMenus",
+    "webNavigation",
+    "webRequest",
+    "webRequestBlocking",
+    "downloads",
+    "downloads.shelf",
+    "management",
+    "storage",
+    "proxy",
+    "nativeMessaging"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  }
+}

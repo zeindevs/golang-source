@@ -1,0 +1,13 @@
+{
+  "name": "idmx",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "esbuild --bundle background.ts --outfile=background.js --minify"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.276",
+    "@types/node": "^22.7.4",
+    "typescript": "^5.6.2"
+  }
+}
