@@ -1,0 +1,30 @@
+package views
+
+import (
+	"github.com/zeindevs/go-htmx-websocket/data"
+	"github.com/zeindevs/go-htmx-websocket/views/layout"
+)
+
+templ Dashboard(metrics []data.Metric) {
+	@layout.Base() {
+		<div class="p-4">
+			@Feed()
+		</div>
+	}
+}
+
+templ Feed() {
+	<script type="text/javascript" src="/static/notification.js"></script>
+	<div hx-ext="ws" ws-connect="/live" class="flex flex-col justify-between border rounded-lg p-4 gap-2 bg-zinc-900 border-zinc-800">
+		<div class="flex items-center justify-between">
+			<p class="text-lg font-medium">Feed</p>
+			<p id="pulse" class="flex items-center text-sm">
+				<span class="[.active_&]:block hidden">live</span>
+				<span class="[.active_&]:hidden block">Disconnected</span>
+			</p>
+		</div>
+		<div id="notification" hx-swap-oob="morphdom">
+			<p class="last:block hidden">No recent changes.</p>
+		</div>
+	</div>
+}

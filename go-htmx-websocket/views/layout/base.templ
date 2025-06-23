@@ -1,0 +1,23 @@
+package layout
+
+templ Base() {
+	<!DOCTYPE html>
+	<html lang="en" class="dark">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>GO HTMX Websocket</title>
+			<link rel="stylesheet" href="/static/style.css"/>
+			<script src="/static/htmx.min.js"></script>
+			<script src="/static/ws.js"></script>
+		</head>
+		<body class="flex text-white h-screen bg-zinc-950">
+			<nav class="max-w-[200px] w-full bg-zinc-950 p-4 flex flex-col gap-2 border-r border-zinc-900">
+				<a href="/" class="flex py-2 px-4 rounded font-medium bg-zinc-900">Dashboard</a>
+			</nav>
+			<main class="flex-1 bg-zinc-950">
+				{ children... }
+			</main>
+		</body>
+	</html>
+}

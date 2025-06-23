@@ -1,0 +1,4 @@
+@BASEURL = http://localhost:3000
+
+### Send Notification
+POST {{BASEURL}}/notification
