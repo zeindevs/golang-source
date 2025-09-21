@@ -1,0 +1,21 @@
+###
+
+@BASEURL = http://localhost:5001
+
+
+### Get captcha
+
+GET {{BASEURL}}/captcha HTTP/1.1
+
+
+### Image captcha
+
+GET {{BASEURL}}/captcha/image HTTP/1.1
+
+
+### Verify captcha
+
+POST {{BASEURL}}/captcha/verify HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+captcha_id=Z4fuRzdbtY2q4F0cD1BG&captcha_solution=10095
